@@ -4,8 +4,8 @@
 #include <ArduinoOTA.h>
 #include <BlynkSimpleEsp8266.h>
 #include <SPI.h>
-#include <bitBangedSPI.h>
-#include <MAX7219_Dot_Matrix.h>
+//#include <bitBangedSPI.h>
+//#include <MAX7219_Dot_Matrix.h>
 
 #define OTA_UPDATES
 #define OTA_HOSTNAME    "POWER-MONITOR"
@@ -15,15 +15,17 @@
 EnergyMonitor emon1;             // Create an instance
 
 // 4 chips (display module), hardware SPI with load on D2
-MAX7219_Dot_Matrix display (4, 2);  // Chips / LOAD 
+//MAX7219_Dot_Matrix display (4, 2);  // Chips / LOAD 
+
+
 
 char message [] = "Booting...";
 
 #define BLYNK_PRINT Serial
-char auth[] = "__replace_your_own__";
+char auth[] = "c40e28d8880a4483a34c0d4e3672e715";
 
-const char* ssid = "__replace_your_own__";
-const char* password = "__replace_your_own__";
+const char* ssid = "HUAWEI-E5172-E9FC";
+const char* password = "0M65JFMA5BA";
 
 unsigned long lastMoved = 0;
 unsigned long MOVE_INTERVAL = 20;  // mS
@@ -33,15 +35,15 @@ int adc = 0;
 
 const long price = 0.6*24*30; // price kwh * 24 hours * 30 days
 
-void updateDisplay ()
+/*void updateDisplay ()
   {
-  display.sendSmooth (message, messageOffset);
+//  display.sendSmooth (message, messageOffset);
   
   // next time show one pixel onwards
   if (messageOffset++ >= (int) (strlen (message) * 8))
     messageOffset = - chips * 8;
   }  // end of updateDisplay
-
+*/
 int calcPower() {
 
   double Irms = emon1.calcIrms(1480);  // Calculate Irms only
@@ -56,15 +58,11 @@ int calcPower() {
   char buf [20];
   sprintf (buf, "%.0fWh", Irms*236 );  // I measured 236V on my mains
   Serial.println(buf);
-  display.sendString (buf);
+//  display.sendString (buf);
   return Irms*236;
 }
 
-BlynkTimer timer;
 
-// This function sends Arduino's up time every second to Virtual Pin (5).
-// In the app, Widget's reading frequency should be set to PUSH. This means
-// that you define how often to send data to Blynk App.
 void readPower()
 {
   // You can send any value at any time.
@@ -90,10 +88,17 @@ BLYNK_WRITE(V0)
 }
 
 void setup() {
+BlynkTimer timer;
+
+// This function sends Arduino's up time every second to Virtual Pin (5).
+// In the app, Widget's reading frequency should be set to PUSH. This means
+// that you define how often to send data to Blynk App.
+
+  
   emon1.current(A0, 23.4);             // Current: input pin, calibration (2000/burden resistance)
-  display.begin ();
-  display.setIntensity (1);
-  display.sendString("..");
+//  display.begin ();
+//  display.setIntensity (1);
+ // display.sendString("..");
   Serial.begin(115200);
   Serial.println("Booting");
   WiFi.mode(WIFI_STA);
@@ -145,7 +150,7 @@ void setup() {
   Serial.println("Ready");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
-  display.sendString("OK");
+  //display.sendString("OK");
   pinMode(LED_BUILTIN, OUTPUT);     // Initialize the LED_BUILTIN pin as an output
   Blynk.begin(auth, ssid, password);
 
