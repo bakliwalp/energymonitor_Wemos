@@ -24,8 +24,8 @@ char message [] = "Booting...";
 #define BLYNK_PRINT Serial
 char auth[] = "c40e28d8880a4483a34c0d4e3672e715";
 
-const char* ssid = "HUAWEI-E5172-E9FC";
-const char* password = "0M65JFMA5BA";
+const char* ssid = "";
+const char* password = "";
 
 unsigned long lastMoved = 0;
 unsigned long MOVE_INTERVAL = 20;  // mS
